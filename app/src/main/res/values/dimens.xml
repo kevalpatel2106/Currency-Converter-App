@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!--General dimensions-->
+    <dimen name="activity_horizontal_margin">@dimen/spacing_small</dimen>
+    <item name="match_parent" type="dimen">-1</item>
+    <item name="wrap_content" type="dimen">-2</item>
+
+    <dimen name="currency_flag_image_dimen">40dp</dimen>
+    <dimen name="currency_code_text_view_height">24dp</dimen>
+    <dimen name="currency_name_text_view_height">20dp</dimen>
+    <dimen name="currency_name_text_size">14sp</dimen>
+    <dimen name="currency_code_text_size">16sp</dimen>
+    <dimen name="currency_list_rv_width">@dimen/match_parent</dimen>
+    <dimen name="currency_list_title_margin_start">68dp</dimen>
+</resources>

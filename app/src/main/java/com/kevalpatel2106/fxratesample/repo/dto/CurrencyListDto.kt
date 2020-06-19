@@ -1,4 +1,4 @@
-package com.kevalpatel2106.fxratesample.repo.network
+package com.kevalpatel2106.fxratesample.repo.dto
 
 import com.squareup.moshi.Json
 import com.squareup.moshi.JsonClass

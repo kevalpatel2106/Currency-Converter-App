@@ -10,7 +10,7 @@ import retrofit2.converter.moshi.MoshiConverterFactory
 import java.util.concurrent.TimeUnit
 
 
-object NetworkProvider {
+object NetworkClientProvider {
     private const val READ_TIMEOUT = 1L        // minute
     private const val WRITE_TIMEOUT = 1L       // minute
     private const val CONNECTION_TIMEOUT = 1L  // minute
