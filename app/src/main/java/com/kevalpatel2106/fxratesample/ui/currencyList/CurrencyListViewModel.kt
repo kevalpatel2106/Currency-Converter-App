@@ -15,6 +15,7 @@ import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.functions.BiFunction
 import io.reactivex.subjects.BehaviorSubject
 import io.reactivex.subjects.PublishSubject
+import java.util.concurrent.TimeUnit
 import javax.inject.Inject
 
 class CurrencyListViewModel @Inject constructor(
@@ -33,26 +34,33 @@ class CurrencyListViewModel @Inject constructor(
     )
     val currencyListViewStates: LiveData<CurrencyListViewState> = _currencyListViewStates
 
+    private val _errorViewState = MutableLiveData<ErrorViewState>(ErrorViewState.HideError)
+    val errorViewState: LiveData<ErrorViewState> = _errorViewState
+
     init {
         monitorCurrencyRates()
         refreshSignal.onNext(Unit)
     }
 
     private fun monitorCurrencyRates() {
+        val fxRatesPollingFlowable = currencyListRepository.monitorCurrencyList()
+            .doOnError { _errorViewState.value = ErrorViewState.ShowError }
+            .retryWhen { it.delay(1, TimeUnit.SECONDS) }
+
         Flowable.combineLatest(
             refreshSignal.toFlowable(BackpressureStrategy.DROP),
-            currencyListRepository.monitorCurrencyList(),
+            fxRatesPollingFlowable,
             BiFunction { _: Unit, currencies: List<Currency> -> currencies }
-        ).doOnSubscribe {
-            _currencyListViewStates.value = CurrencyListViewState.InitialLoad
-        }.doOnNext(this::publishDisplayAmountChanges)
+        ).doOnNext(this::publishDisplayAmountChanges)
+            .doAfterNext { _errorViewState.value = ErrorViewState.HideError }
             .map(this::convertToListOfAdapterItems)
             .distinctUntilChanged()
             .subscribe({
                 _currencyListViewStates.value = CurrencyListViewState.UpdateList(it)
             }, {
-                _currencyListViewStates.value = CurrencyListViewState.Error(it.message.orEmpty())
-            }).addTo(compositeDisposable)
+                _errorViewState.value = ErrorViewState.ShowError
+            })
+            .addTo(compositeDisposable)
     }
 
     private fun convertToListOfAdapterItems(currencies: List<Currency>): List<CurrencyListItemRepresentable> {

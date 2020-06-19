@@ -3,12 +3,12 @@ package com.kevalpatel2106.fxratesample.ui.currencyList
 import android.content.Context
 import android.os.Bundle
 import android.view.View
-import android.widget.Toast
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.DefaultItemAnimator
+import com.google.android.material.snackbar.Snackbar
 import com.kevalpatel2106.fxratesample.R
 import com.kevalpatel2106.fxratesample.di.AppComponent
 import com.kevalpatel2106.fxratesample.ui.currencyList.adapter.CurrencyListAdapter
@@ -20,6 +20,10 @@ import javax.inject.Inject
 class CurrencyListFragment
     : Fragment(R.layout.fragment_currency_list),
     CurrencyListActionsListener {
+
+    private val errorSnackbar by lazy {
+        Snackbar.make(currencyListRootContainer, R.string.no_connection, Snackbar.LENGTH_INDEFINITE)
+    }
 
     @Inject
     internal lateinit var viewModelProvider: ViewModelProvider.Factory
@@ -41,7 +45,17 @@ class CurrencyListFragment
             when (val state = it) {
                 CurrencyListViewState.InitialLoad -> handleInitialLoadingState()
                 is CurrencyListViewState.UpdateList -> handleUpdateListState(state, adapter)
-                is CurrencyListViewState.Error -> handleErrorState(state)
+            }
+        }
+
+        model.errorViewState.nullSafeObserve(viewLifecycleOwner) {
+            when (it) {
+                ErrorViewState.HideError -> {
+                    if (errorSnackbar.isShownOrQueued) errorSnackbar.dismiss()
+                }
+                ErrorViewState.ShowError -> {
+                    if (!errorSnackbar.isShownOrQueued) errorSnackbar.show()
+                }
             }
         }
     }
@@ -58,12 +72,6 @@ class CurrencyListFragment
         currencyListLoader.isVisible = false
         currencyListRv.isVisible = true
         adapter.submitList(state.currencyList)
-    }
-
-    private fun handleErrorState(state: CurrencyListViewState.Error) {
-        currencyListLoader.isVisible = false
-        currencyListRv.isVisible = true
-        Toast.makeText(requireContext(), state.errorMessage, Toast.LENGTH_SHORT).show()
     }
 
     private fun setUpRecyclerView(currencyListAdapter: CurrencyListAdapter) {

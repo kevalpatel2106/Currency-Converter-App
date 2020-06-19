@@ -31,9 +31,8 @@ class CurrencyListRepositoryImpl @Inject constructor(
         baseCurrency: String,
         intervalInMills: Long
     ): Flowable<List<Currency>> {
-        return Flowable
-            .interval(intervalInMills, TimeUnit.MILLISECONDS, Schedulers.computation())
-            .flatMap { currencyListApi.getListOfBaseCurrency(baseCurrency).toFlowable() }
+        return currencyListApi.getListOfBaseCurrency(baseCurrency)
+            .repeatWhen { it.delay(intervalInMills, TimeUnit.MILLISECONDS) }
             .map(currencyListDtoMapper::toEntity)
             .subscribeOn(Schedulers.io())
             .observeOn(AndroidSchedulers.mainThread())

@@ -3,4 +3,5 @@
     <string name="title_currency_list_fragment">Rates</string>
     <string name="list_item_currency_value_hint">0.00</string>
     <string name="error_amount">\@@@</string>
+    <string name="no_connection">No connected</string>
 </resources>

@@ -7,6 +7,9 @@ sealed class CurrencyListViewState {
 
     data class UpdateList(val currencyList: List<CurrencyListItemRepresentable>) :
         CurrencyListViewState()
+}
 
-    data class Error(val errorMessage: String) : CurrencyListViewState()
+sealed class ErrorViewState {
+    object ShowError : ErrorViewState()
+    object HideError : ErrorViewState()
 }
