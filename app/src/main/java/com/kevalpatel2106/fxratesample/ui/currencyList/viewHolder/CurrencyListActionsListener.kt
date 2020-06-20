@@ -5,7 +5,9 @@ import com.kevalpatel2106.fxratesample.entity.CurrencyCode
 
 interface CurrencyListActionsListener {
 
-    fun onItemSelected(code: CurrencyCode, amount: Amount)
+    fun onRowClicked(code: CurrencyCode, amount: Amount)
+
+    fun onItemFocused(code: CurrencyCode, amount: Amount)
 
     fun onAmountChanged(code: CurrencyCode, amount: Amount)
 }

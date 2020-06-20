@@ -89,8 +89,12 @@ class CurrencyListFragment
         model.onSelectedCurrencyAmountChanged(code, amount)
     }
 
-    override fun onItemSelected(code: CurrencyCode, amount: Amount) {
+    override fun onItemFocused(code: CurrencyCode, amount: Amount) {
         model.onSelectedCurrencyAmountChanged(code, amount)
-        currencyListRv.post { currencyListRv.smoothScrollToPosition(0) }
+    }
+
+    override fun onRowClicked(code: CurrencyCode, amount: Amount) {
+        model.onSelectedCurrencyAmountChanged(code, amount)
+        currencyListRv.postDelayed({ currencyListRv.smoothScrollToPosition(0) }, 500)
     }
 }

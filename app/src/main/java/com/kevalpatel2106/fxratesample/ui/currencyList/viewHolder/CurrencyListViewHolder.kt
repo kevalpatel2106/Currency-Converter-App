@@ -36,14 +36,14 @@ class CurrencyListViewHolder(
             .into(listItemCurrencyFlagIv)
 
         listItemCurrencyRootContainer.setOnClickListener {
-            listener.onItemSelected(item.code, listItemCurrencyValueEt.getAmount())
+            listener.onRowClicked(item.code, listItemCurrencyValueEt.getAmount())
         }
     }
 
     private fun FxRatesEditText.makeReadOnly(item: CurrencyListItemRepresentable) {
         setUpReadOnly(item.code, displayAmountObservable)
         setOnFocusChangeListener { _, hasFocus ->
-            if (hasFocus) listener.onItemSelected(item.code, listItemCurrencyValueEt.getAmount())
+            if (hasFocus) listener.onItemFocused(item.code, listItemCurrencyValueEt.getAmount())
         }
     }
 
