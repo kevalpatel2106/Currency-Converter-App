@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.coordinatorlayout.widget.CoordinatorLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/currencyListRootContainer"
@@ -15,6 +15,7 @@
             android:id="@+id/currencyListToolbar"
             android:layout_width="match_parent"
             android:layout_height="?actionBarSize"
+            app:layout_scrollFlags="scroll|enterAlways"
             app:title="@string/title_currency_list_fragment"
             app:titleMarginStart="@dimen/currency_list_title_margin_start" />
     </com.google.android.material.appbar.AppBarLayout>
@@ -23,15 +24,14 @@
         android:id="@+id/currencyListRv"
         android:layout_width="@dimen/currency_list_rv_width"
         android:layout_height="match_parent"
-        android:layout_below="@id/currencyListAppBar"
         android:layout_centerHorizontal="true"
         app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+        app:layout_behavior="@string/appbar_scrolling_view_behavior"
         tools:listitem="@layout/list_item_currency" />
 
     <ProgressBar
         android:id="@+id/currencyListLoader"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_centerHorizontal="true"
-        android:layout_centerVertical="true" />
-</RelativeLayout>
+        android:layout_gravity="center" />
+</androidx.coordinatorlayout.widget.CoordinatorLayout>
