@@ -47,6 +47,6 @@ class CurrencyListDtoMapperImpl : CurrencyListDtoMapper {
     private companion object {
         private const val FX_RATE_FOR_BASE_CURRENCY = 1.0
         private const val FLAG_BASE_URL =
-            "https://raw.githubusercontent.com/midorikocak/currency-picker-android/master/currencypicker/src/main/res/drawable/"
+            "https://raw.githubusercontent.com/kevalpatel2106/Fx-Rates-App/master/currency-flags/"
     }
 }
