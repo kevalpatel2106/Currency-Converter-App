@@ -16,9 +16,9 @@ import io.reactivex.Flowable
 import io.reactivex.Observable
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.functions.BiFunction
+import io.reactivex.functions.Consumer
 import io.reactivex.subjects.BehaviorSubject
 import io.reactivex.subjects.PublishSubject
-import java.util.concurrent.TimeUnit
 import javax.inject.Inject
 
 class CurrencyListViewModel @Inject constructor(
@@ -47,9 +47,9 @@ class CurrencyListViewModel @Inject constructor(
     }
 
     private fun monitorCurrencyRates() {
-        val fxRatesPollingFlowable = currencyListRepository.monitorCurrencyList()
-            .doOnError { _errorViewState.value = ErrorViewState.ShowError }
-            .retryWhen { it.delay(1, TimeUnit.SECONDS) }
+        val fxRatesPollingFlowable = currencyListRepository.monitorCurrencyList(
+            doOnError = Consumer { _errorViewState.postValue(ErrorViewState.ShowError) }
+        )
 
         Flowable.combineLatest(
             refreshSignal.toFlowable(BackpressureStrategy.DROP),

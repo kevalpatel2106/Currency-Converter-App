@@ -23,7 +23,7 @@ class CurrencyListDtoMapperImplTest {
     @Test
     fun `given currency dto when converting to entity check size of the list`() {
         val currencies = CurrencyListDtoMapperImpl().toEntity(mockCurrencyDto)
-        assertEquals(mapOfCurrency.size + 1, currencies.size)
+        assertEquals(mapOfCurrency.size + 1 /* Base currency */, currencies.size)
     }
 
     @Test

@@ -10,17 +10,12 @@ import retrofit2.converter.moshi.MoshiConverterFactory
 import java.util.concurrent.TimeUnit
 
 
-object NetworkClientProvider {
-    private const val READ_TIMEOUT = 1L        // minute
-    private const val WRITE_TIMEOUT = 1L       // minute
-    private const val CONNECTION_TIMEOUT = 1L  // minute
-    private const val BASE_URL = "https://hiring.revolut.codes/api/android/"
-
+class NetworkClientProvider(val baseUrl: String, val timeOutMins: Long) {
     private val okHttpClient = OkHttpClient.Builder()
         .apply {
-            readTimeout(READ_TIMEOUT, TimeUnit.MINUTES)
-            writeTimeout(WRITE_TIMEOUT, TimeUnit.MINUTES)
-            connectTimeout(CONNECTION_TIMEOUT, TimeUnit.MINUTES)
+            readTimeout(timeOutMins, TimeUnit.MINUTES)
+            writeTimeout(timeOutMins, TimeUnit.MINUTES)
+            connectTimeout(timeOutMins, TimeUnit.MINUTES)
 
             if (BuildConfig.DEBUG) {
                 addInterceptor(HttpLoggingInterceptor()
@@ -33,7 +28,7 @@ object NetworkClientProvider {
 
     fun getRetrofitClient(): Retrofit {
         return Retrofit.Builder()
-            .baseUrl(BASE_URL)
+            .baseUrl(baseUrl)
             .client(okHttpClient)
             .addCallAdapterFactory(RxJava2CallAdapterFactory.create())
             .addConverterFactory(MoshiConverterFactory.create(moshi))
