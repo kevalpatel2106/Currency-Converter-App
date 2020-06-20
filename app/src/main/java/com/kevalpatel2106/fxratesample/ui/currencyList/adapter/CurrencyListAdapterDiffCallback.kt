@@ -2,6 +2,11 @@ package com.kevalpatel2106.fxratesample.ui.currencyList.adapter
 
 import androidx.recyclerview.widget.DiffUtil
 
+/**
+ * [DiffUtil.ItemCallback] for the [CurrencyListAdapter]
+ *
+ * @see CurrencyListAdapter
+ */
 internal object CurrencyListAdapterDiffCallback :
     DiffUtil.ItemCallback<CurrencyListItemRepresentable>() {
 

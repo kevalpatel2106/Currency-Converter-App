@@ -8,6 +8,15 @@ import com.kevalpatel2106.fxratesample.ui.currencyList.viewHolder.CurrencyListAc
 import com.kevalpatel2106.fxratesample.ui.currencyList.viewHolder.CurrencyListViewHolder
 import io.reactivex.Observable
 
+/**
+ * [ListAdapter] that binds the [List] of [CurrencyListItemRepresentable] to recycler view.
+ *
+ * @param listener [CurrencyListActionsListener] to listen adapter events
+ * @param displayAmountObservable [Observable] that emits [Map] of currency code and their
+ * amount to be displayed
+ * @see CurrencyListActionsListener
+ * @see CurrencyListAdapterDiffCallback
+ */
 class CurrencyListAdapter(
     private val listener: CurrencyListActionsListener,
     private val displayAmountObservable: Observable<Map<CurrencyCode, Amount>>

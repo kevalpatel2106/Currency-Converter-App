@@ -3,6 +3,9 @@ package com.kevalpatel2106.fxratesample.repo.dto
 import com.kevalpatel2106.fxratesample.entity.Currency
 import java.util.*
 
+/**
+ * Mapper that maps [CurrencyListDto] to [List] of [Currency]
+ */
 interface CurrencyListDtoMapper {
     fun toEntity(dto: CurrencyListDto): List<Currency>
 }

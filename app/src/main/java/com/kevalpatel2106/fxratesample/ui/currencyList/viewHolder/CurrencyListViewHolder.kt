@@ -22,6 +22,9 @@ class CurrencyListViewHolder(
 ) : RecyclerView.ViewHolder(containerView), LayoutContainer,
     FxRatesEditText.AmountInputChangedListener {
 
+    /**
+     * Binds [item] to  this [CurrencyListViewHolder]
+     */
     fun bind(item: CurrencyListItemRepresentable) {
         listItemCurrencyCodeTv.text = item.code
         listItemCurrencyNameTv.text = item.name
@@ -57,11 +60,21 @@ class CurrencyListViewHolder(
         }
     }
 
-    override fun onAmountChanged(newAmount: Double) {
+    override fun onAmountChanged(newAmount: Amount) {
         listener.onAmountChanged(listItemCurrencyCodeTv.text.toString(), newAmount)
     }
 
     companion object {
+
+        /**
+         * Creates new instance of [CurrencyListViewHolder]
+         *
+         * @property displayAmountObservable [Observable] that emits [Map] of currency code and their
+         * amount to be displayed
+         * @property parent Parent [ViewGroup]
+         * @property listener [CurrencyListActionsListener] to observe the events (e.g. select,
+         * amount changed) from this view holder
+         */
         fun create(
             parent: ViewGroup,
             displayAmountObservable: Observable<Map<CurrencyCode, Amount>>,

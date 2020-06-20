@@ -13,6 +13,18 @@ import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.schedulers.Schedulers
 
+/***
+ * Subclass of [AppCompatEditText] that handles showing the currency amount and make it editable.
+ *
+ * This class can be operated in two modes:
+ * 1. [setUpReadOnly] will make this edit text read only and it will observe the changes emitted by
+ * displayAmountObservable
+ * 2. [setUpEditable] will make this edit text editable and it will stop observing changes emitted by
+ * displayAmountObservable as soon as initial value is set. i.e. [isInitialValueSet] is true
+ *
+ * @see [setUpReadOnly]
+ * @see [setUpEditable]
+ */
 class FxRatesEditText(
     context: Context,
     attributes: AttributeSet
@@ -32,6 +44,15 @@ class FxRatesEditText(
     private var isEditable = false
     private var amountChangeListener: AmountInputChangedListener? = null
 
+    /**
+     * Set this edit text as read only. In read only mode, this view
+     * - won't observe text changes
+     * - change the amount displayed based on [displayAmountObservable]
+     *
+     * @property code Code of the currency to observe
+     * @property displayAmountObservable [Observable] that emits [Map] of currency code and their
+     * amount to be displayed
+     */
     fun setUpReadOnly(
         code: String,
         displayAmountObservable: Observable<Map<CurrencyCode, Amount>>
@@ -41,6 +62,18 @@ class FxRatesEditText(
         observeAmountChanges(code, displayAmountObservable)
     }
 
+    /**
+     * Set this edit text as editable. In editable mode, this view
+     * - will observe text changes
+     * - won't change the amount displayed based on [displayAmountObservable] after setting the
+     * initial value
+     *
+     * @property code Code of the currency to observe
+     * @property displayAmountObservable [Observable] that emits [Map] of currency code and their
+     * amount to be displayed
+     * @property listener [AmountInputChangedListener] that will notify when amount is edited.
+     * (see [onTextChanged])
+     */
     fun setUpEditable(
         code: String,
         listener: AmountInputChangedListener,
@@ -53,6 +86,11 @@ class FxRatesEditText(
         observeAmountChanges(code, displayAmountObservable)
     }
 
+    /**
+     * Get current amount displayed in edit text
+     *
+     * @return [emptyAmount] if text is null or blank else [Amount] displayed
+     */
     fun getAmount(): Amount {
         return if (text.isNullOrBlank()) emptyAmount() else text.toString().toDouble()
     }
@@ -97,7 +135,16 @@ class FxRatesEditText(
         compositeDisposable.clear()
     }
 
+    /**
+     * Listener to notify subscriber when amount in [FxRatesEditText] is changed
+     */
     interface AmountInputChangedListener {
-        fun onAmountChanged(newAmount: Double)
+
+        /**
+         * This method will be called when amount in [FxRatesEditText] is changed
+         *
+         * @property newAmount new [Amount] that is changed
+         */
+        fun onAmountChanged(newAmount: Amount)
     }
 }

@@ -19,6 +19,9 @@ import com.kevalpatel2106.fxratesample.utils.nullSafeObserve
 import kotlinx.android.synthetic.main.fragment_currency_list.*
 import javax.inject.Inject
 
+/**
+ * Subclass of [Fragment] that shows the list of the currencies with their respected FX rates
+ */
 class CurrencyListFragment
     : Fragment(R.layout.fragment_currency_list), CurrencyListActionsListener {
 
