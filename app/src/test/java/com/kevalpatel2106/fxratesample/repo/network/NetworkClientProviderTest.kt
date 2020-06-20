@@ -26,8 +26,6 @@ class NetworkClientProviderTest {
         val callAdapterFactories = NetworkClientProvider(testBaseUrl, timeOutMins)
             .getRetrofitClient()
             .callAdapterFactories()
-
-        assertEquals(1, callAdapterFactories.size)
         assertNotNull(callAdapterFactories.find { it is RxJava2CallAdapterFactory })
     }
 
@@ -37,8 +35,6 @@ class NetworkClientProviderTest {
         val converterFactories = NetworkClientProvider(testBaseUrl, timeOutMins)
             .getRetrofitClient()
             .converterFactories()
-
-        assertEquals(1, converterFactories.size)
         assertNotNull(converterFactories.find { it is MoshiConverterFactory })
     }
 }
