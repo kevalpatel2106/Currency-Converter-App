@@ -11,6 +11,8 @@ import androidx.recyclerview.widget.DefaultItemAnimator
 import com.google.android.material.snackbar.Snackbar
 import com.kevalpatel2106.fxratesample.R
 import com.kevalpatel2106.fxratesample.di.AppComponent
+import com.kevalpatel2106.fxratesample.entity.Amount
+import com.kevalpatel2106.fxratesample.entity.CurrencyCode
 import com.kevalpatel2106.fxratesample.ui.currencyList.adapter.CurrencyListAdapter
 import com.kevalpatel2106.fxratesample.ui.currencyList.viewHolder.CurrencyListActionsListener
 import com.kevalpatel2106.fxratesample.utils.nullSafeObserve
@@ -18,8 +20,7 @@ import kotlinx.android.synthetic.main.fragment_currency_list.*
 import javax.inject.Inject
 
 class CurrencyListFragment
-    : Fragment(R.layout.fragment_currency_list),
-    CurrencyListActionsListener {
+    : Fragment(R.layout.fragment_currency_list), CurrencyListActionsListener {
 
     private val errorSnackbar by lazy {
         Snackbar.make(currencyListRootContainer, R.string.no_connection, Snackbar.LENGTH_INDEFINITE)
@@ -41,13 +42,16 @@ class CurrencyListFragment
 
         setUpRecyclerView(adapter)
 
-        model.currencyListViewStates.nullSafeObserve(viewLifecycleOwner) {
+        model.currencyListUiStates.nullSafeObserve(viewLifecycleOwner) {
             when (val state = it) {
-                CurrencyListViewState.InitialLoad -> handleInitialLoadingState()
-                is CurrencyListViewState.UpdateList -> handleUpdateListState(state, adapter)
+                CurrencyListUiState.InitialLoad -> handleInitialLoadingState()
+                is CurrencyListUiState.UpdateList -> handleUpdateListState(state, adapter)
             }
         }
+        observeErrorStates()
+    }
 
+    private fun observeErrorStates() {
         model.errorViewState.nullSafeObserve(viewLifecycleOwner) {
             when (it) {
                 ErrorViewState.HideError -> {
@@ -66,7 +70,7 @@ class CurrencyListFragment
     }
 
     private fun handleUpdateListState(
-        state: CurrencyListViewState.UpdateList,
+        state: CurrencyListUiState.UpdateList,
         adapter: CurrencyListAdapter
     ) {
         currencyListLoader.isVisible = false
@@ -76,18 +80,17 @@ class CurrencyListFragment
 
     private fun setUpRecyclerView(currencyListAdapter: CurrencyListAdapter) {
         currencyListRv.apply {
-            itemAnimator = DefaultItemAnimator().apply {
-                supportsChangeAnimations = false
-            }
+            itemAnimator = DefaultItemAnimator().apply { supportsChangeAnimations = false }
             adapter = currencyListAdapter
         }
     }
 
-    override fun onAmountChanged(code: String, amount: Double) {
+    override fun onAmountChanged(code: CurrencyCode, amount: Amount) {
         model.onSelectedCurrencyAmountChanged(code, amount)
     }
 
-    override fun onItemSelected(code: String, amount: Double) {
+    override fun onItemSelected(code: CurrencyCode, amount: Amount) {
         model.onSelectedCurrencyAmountChanged(code, amount)
+        currencyListRv.post { currencyListRv.smoothScrollToPosition(0) }
     }
 }

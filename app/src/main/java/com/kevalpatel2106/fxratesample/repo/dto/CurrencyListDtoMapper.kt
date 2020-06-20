@@ -7,8 +7,8 @@ interface CurrencyListDtoMapper {
     fun toEntity(dto: CurrencyListDto): List<Currency>
 }
 
-class CurrencyListDtoMapperImpl :
-    CurrencyListDtoMapper {
+class CurrencyListDtoMapperImpl : CurrencyListDtoMapper {
+
     override fun toEntity(dto: CurrencyListDto): List<Currency> {
         val currencies = mutableListOf<Currency>()
         currencies.add(

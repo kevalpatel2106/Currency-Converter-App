@@ -3,11 +3,14 @@ package com.kevalpatel2106.fxratesample.ui.currencyList
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import com.kevalpatel2106.fxratesample.entity.Amount
 import com.kevalpatel2106.fxratesample.entity.Currency
+import com.kevalpatel2106.fxratesample.entity.CurrencyCode
 import com.kevalpatel2106.fxratesample.repo.CurrencyListRepository
 import com.kevalpatel2106.fxratesample.ui.currencyList.CurrencyListVmUseCase.getAmountInBaseCurrency
 import com.kevalpatel2106.fxratesample.ui.currencyList.adapter.CurrencyListItemRepresentable
 import com.kevalpatel2106.fxratesample.utils.addTo
+import com.kevalpatel2106.fxratesample.utils.emptyAmount
 import io.reactivex.BackpressureStrategy
 import io.reactivex.Flowable
 import io.reactivex.Observable
@@ -24,15 +27,16 @@ class CurrencyListViewModel @Inject constructor(
     private val compositeDisposable = CompositeDisposable()
     private var selectedCurrencyData: SelectedCurrencyData? = null
 
-    private val _displayAmountObservable = BehaviorSubject.create<Map<String, Double>>()
-    val displayAmountObservable: Observable<Map<String, Double>> = _displayAmountObservable.hide()
+    private val _displayAmountObservable = BehaviorSubject.create<Map<CurrencyCode, Amount>>()
+    val displayAmountObservable: Observable<Map<CurrencyCode, Amount>> =
+        _displayAmountObservable.hide()
 
     private val refreshSignal = PublishSubject.create<Unit>()
 
-    private val _currencyListViewStates = MutableLiveData<CurrencyListViewState>(
-        CurrencyListViewState.InitialLoad
+    private val _currencyListUiStates = MutableLiveData<CurrencyListUiState>(
+        CurrencyListUiState.InitialLoad
     )
-    val currencyListViewStates: LiveData<CurrencyListViewState> = _currencyListViewStates
+    val currencyListUiStates: LiveData<CurrencyListUiState> = _currencyListUiStates
 
     private val _errorViewState = MutableLiveData<ErrorViewState>(ErrorViewState.HideError)
     val errorViewState: LiveData<ErrorViewState> = _errorViewState
@@ -56,8 +60,9 @@ class CurrencyListViewModel @Inject constructor(
             .map(this::convertToListOfAdapterItems)
             .distinctUntilChanged()
             .subscribe({
-                _currencyListViewStates.value = CurrencyListViewState.UpdateList(it)
+                _currencyListUiStates.value = CurrencyListUiState.UpdateList(it)
             }, {
+                it.printStackTrace()
                 _errorViewState.value = ErrorViewState.ShowError
             })
             .addTo(compositeDisposable)
@@ -78,7 +83,7 @@ class CurrencyListViewModel @Inject constructor(
         updatedCurrencies.forEach {
             hashMap[it.code] =
                 if (selectedCurrencyData != null && it.code == selectedCurrencyData?.code) {
-                    selectedCurrencyData?.amount ?: 0.0
+                    selectedCurrencyData?.amount ?: emptyAmount()
                 } else {
                     it.rate * valueInBaseCurrency
                 }
@@ -86,7 +91,7 @@ class CurrencyListViewModel @Inject constructor(
         _displayAmountObservable.onNext(hashMap)
     }
 
-    fun onSelectedCurrencyAmountChanged(code: String, amount: Double) {
+    fun onSelectedCurrencyAmountChanged(code: CurrencyCode, amount: Amount) {
         selectedCurrencyData = SelectedCurrencyData(code, amount)
         refreshSignal.onNext(Unit)
     }

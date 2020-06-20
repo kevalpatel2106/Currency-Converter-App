@@ -2,11 +2,11 @@ package com.kevalpatel2106.fxratesample.ui.currencyList
 
 import com.kevalpatel2106.fxratesample.ui.currencyList.adapter.CurrencyListItemRepresentable
 
-sealed class CurrencyListViewState {
-    object InitialLoad : CurrencyListViewState()
+sealed class CurrencyListUiState {
+    object InitialLoad : CurrencyListUiState()
 
     data class UpdateList(val currencyList: List<CurrencyListItemRepresentable>) :
-        CurrencyListViewState()
+        CurrencyListUiState()
 }
 
 sealed class ErrorViewState {

@@ -15,3 +15,5 @@ fun Disposable.addTo(compositeDisposable: CompositeDisposable) {
 }
 
 fun Double.toStringUpToTwoDecimal() = String.format("%.2f", this)
+
+fun emptyAmount() = 0.0
