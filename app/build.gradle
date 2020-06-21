@@ -16,6 +16,8 @@ android {
 
         versionCode 1
         versionName "1.0"
+
+        testInstrumentationRunner "com.kevalpatel2106.fxratesample.UiTestsRunner"
     }
 
     buildTypes {
@@ -26,6 +28,8 @@ android {
             minifyEnabled false
             pseudoLocalesEnabled false
             zipAlignEnabled true
+
+            resValue "bool", "use_clear_text", "true"
         }
         release {
             debuggable false
@@ -35,6 +39,7 @@ android {
             renderscriptDebuggable false
             pseudoLocalesEnabled false
             zipAlignEnabled false
+            resValue "bool", "use_clear_text", "false"
         }
     }
 
@@ -50,6 +55,10 @@ android {
     kotlinOptions {
         jvmTarget = JavaVersion.VERSION_1_8.toString()
     }
+
+    testOptions {
+        animationsDisabled = true
+    }
 }
 
 dependencies {
@@ -61,6 +70,7 @@ dependencies {
 
     // Dagger
     implementation "com.google.dagger:dagger-android:$dagger_version"
+    androidTestImplementation 'androidx.test.espresso:espresso-contrib:3.3.0-rc01'
     kapt "com.google.dagger:dagger-compiler:$dagger_version"
     compileOnly 'javax.annotation:jsr250-api:1.0'
 
@@ -93,4 +103,10 @@ dependencies {
     testImplementation "com.nhaarman.mockitokotlin2:mockito-kotlin:2.2.0"
     testImplementation 'androidx.arch.core:core-testing:2.1.0'
     testImplementation "com.flextrade.jfixture:kfixture:0.2.0"
+
+    androidTestImplementation 'androidx.test:runner:1.2.0'
+    androidTestImplementation 'androidx.test:rules:1.2.0'
+    androidTestImplementation 'androidx.test.espresso:espresso-core:3.2.0'
+    androidTestImplementation "com.squareup.okhttp3:mockwebserver:4.7.2"
+    kaptAndroidTest "com.google.dagger:dagger-compiler:$dagger_version"
 }

@@ -36,7 +36,7 @@ class CurrencyListFragment
 
     override fun onAttach(context: Context) {
         super.onAttach(context)
-        AppComponent.get().inject(this@CurrencyListFragment)
+        AppComponent.get(context.applicationContext).inject(this@CurrencyListFragment)
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {

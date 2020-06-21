@@ -10,7 +10,7 @@ import retrofit2.converter.moshi.MoshiConverterFactory
 import java.util.concurrent.TimeUnit
 
 
-class NetworkClientProvider(val baseUrl: String, val timeOutMins: Long) {
+class NetworkClientProvider(private val baseUrl: String, private val timeOutMins: Long) {
     private val okHttpClient = OkHttpClient.Builder()
         .apply {
             readTimeout(timeOutMins, TimeUnit.MINUTES)

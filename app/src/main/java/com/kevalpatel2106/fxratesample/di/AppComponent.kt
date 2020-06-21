@@ -1,5 +1,7 @@
 package com.kevalpatel2106.fxratesample.di
 
+import android.content.Context
+import com.kevalpatel2106.fxratesample.FxRatesApplication
 import com.kevalpatel2106.fxratesample.repo.CurrencyListRepository
 import com.kevalpatel2106.fxratesample.repo.network.CurrencyListApi
 import com.kevalpatel2106.fxratesample.repo.network.NetworkClientProvider
@@ -8,7 +10,7 @@ import dagger.Component
 import javax.inject.Singleton
 
 @Singleton
-@Component(modules = [AppModule::class, ViewModelBindings::class])
+@Component(modules = [AppModule::class, NetworkModule::class, ViewModelBindings::class])
 interface AppComponent {
     fun provideNetworkClientProvider(): NetworkClientProvider
     fun provideCurrencyListApi(): CurrencyListApi
@@ -17,6 +19,6 @@ interface AppComponent {
     fun inject(currencyListFragment: CurrencyListFragment)
 
     companion object {
-        fun get(): AppComponent = DaggerAppComponent.builder().appModule(AppModule()).build()
+        fun get(context: Context): AppComponent = (context as FxRatesApplication).getAppComponent()
     }
 }
