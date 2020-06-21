@@ -11,4 +11,7 @@
 
     <!--Background colors-->
     <color name="window_background_color">#FFF</color>
+
+    <!--Launcher icon-->
+    <color name="ic_launcher_background">#1081E0</color>
 </resources>
